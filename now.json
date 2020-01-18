@@ -1,47 +1,52 @@
 {
-    "version": 2,
-    "build": {
-        "env": {}
+  "version": 2,
+  "build": {
+    "env": {}
+  },
+  "env": {
+    "EMAIL_SERVICE_URL": "@email_service_url",
+    "EMAIL_SERVICE_KEY": "@email_service_key",
+    "QUEUE_URL": "@queue_url",
+    "CORS_ALLOWED_ORIGIN": "@cors_allowed_origin",
+    "FAUNA_DB_KEY": "@fauna_db_key",
+    "WEBHOOK_KEY": "@webhook_key",
+    "APIFY_API_URL": "@apify_api_url",
+    "AIRTABLE_TEAMS_BASE_KEY": "@airtable_teams_base_key",
+    "AIRTABLE_API_URL": "@airtable_api_url",
+    "AIRTABLE_API_KEY": "@airtable_api_key",
+    "WEBHOOK_SECRET": "@webhook_secret"
+  },
+  "builds": [
+    {
+      "src": "api/**/*",
+      "use": "@now/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/health/",
+      "dest": "/api/health/",
+      "methods": ["GET"]
     },
-    "env": {
-        "EMAIL_SERVICE_URL": "@email_service_url",
-        "EMAIL_SERVICE_KEY": "@email_service_key",
-        "QUEUE_URL": "@queue_url",
-        "CORS_ALLOWED_ORIGIN": "@cors_allowed_origin",
-        "FAUNA_DB_KEY": "@fauna_db_key",
-        "WEBHOOK_KEY": "@webhook_key",
-        "APIFY_API_URL": "@apify_api_url",
-        "AIRTABLE_TEAMS_BASE_KEY": "@airtable_teams_base_key",
-        "AIRTABLE_API_URL": "@airtable_api_url",
-        "AIRTABLE_API_KEY": "@airtable_api_key",
-        "WEBHOOK_SECRET": "@webhook_secret"
+    {
+      "src": "/api/addUser/",
+      "dest": "/api/addUser/",
+      "methods": ["POST"]
     },
-    "builds": [
-        {
-            "src": "api/**/*",
-            "use": "@now/node"
-        }
-    ],
-    "routes": [
-        {
-            "src": "/api/health/",
-            "dest": "/api/health/",
-            "methods": ["GET"]
-        },
-        {
-            "src": "/api/addUser/",
-            "dest": "/api/addUser/",
-            "methods": ["POST"]
-        },
-        {
-            "src": "/api/notifyNewUser/",
-            "dest": "/api/notifyNewUser/",
-            "methods": ["POST"]
-        },
-        {
-            "src": "/api/populateTeams/",
-            "dest": "/api/populateTeams/",
-            "methods": ["POST"]
-        }
-    ]
+    {
+      "src": "/api/notifyNewUser/",
+      "dest": "/api/notifyNewUser/",
+      "methods": ["POST"]
+    },
+    {
+      "src": "/api/populateTeams/",
+      "dest": "/api/populateTeams/",
+      "methods": ["POST"]
+    },
+    {
+      "src": "/api/listTeams/",
+      "dest": "/api/listTeams/",
+      "methods": ["GET"]
+    }
+  ]
 }

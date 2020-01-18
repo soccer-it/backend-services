@@ -79,9 +79,10 @@ app.post('/api/populateTeams/', function(req, res) {
       getCMSTeams()
         .then(cmsTeams => {
           const teams = scraperOutput.map(team => {
-            const cmsConfig = cmsTeams.find(t => t.hash === team.hash)
+            const cmsConfig = cmsTeams.find(t => t.hash === team.hash) || {}
 
             return {
+              active: !!cmsConfig,
               ...team,
               ...cmsConfig,
             }
