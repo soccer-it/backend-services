@@ -4,6 +4,7 @@
     "env": {}
   },
   "env": {
+    "SOCCERIT_SERVICES": "@soccerit_services",
     "EMAIL_SERVICE_URL": "@email_service_url",
     "EMAIL_SERVICE_KEY": "@email_service_key",
     "QUEUE_URL": "@queue_url",

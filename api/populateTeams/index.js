@@ -49,37 +49,78 @@ function getCMSTeams() {
   })
 }
 
-function insertTeams(teams) {
+function getDBTeams() {
   return new Promise((resolve, reject) => {
-    createDbClient().then(client => {
-      client
-        .query(
-          q.Map(
-            teams,
-            q.Lambda(
-              'team',
-              q.Create(q.Collection('teams'), {
-                data: q.Var('team'),
-              })
-            )
-          )
+    request.get(`${process.env.SOCCERIT_SERVICES}/listTeams`, function(
+      err,
+      r,
+      body
+    ) {
+      if (err || r.statusCode !== 200) {
+        return reject(err)
+      }
+
+      resolve(JSON.parse(body))
+    })
+  })
+}
+
+function saveTeams(teams, populate = false) {
+  return new Promise((resolve, reject) => {
+    const mapCrawledTeams = teams.reduce((acc, team) => {
+      return {
+        ...acc,
+        [team.hash]: team,
+      }
+    }, {})
+
+    getDBTeams().then(currentTeams => {
+      createDbClient().then(client => {
+        const create = q.Create(q.Collection('teams'), {
+          data: q.Var('team'),
+        })
+
+        const update = q.Update(
+          q.Ref(q.Collection('teams'), q.Select(['id'], q.Var('team'))),
+          {
+            data: q.Select(
+              [q.Select(['hash'], q.Var('team'))],
+              mapCrawledTeams
+            ),
+          }
         )
-        .then(resolve)
-        .catch(reject)
+
+        const action = populate ? create : update
+
+        client
+          .query(q.Map(currentTeams, q.Lambda('team', action)))
+          .then(resolve)
+          .catch(reject)
+      })
     })
   })
 }
 
 app.post('/api/populateTeams/', function(req, res) {
   const payload = req.body
+
+  const serviceAction = req.body.populate
+
+  if (!payload.resource) {
+    res.status(400).json({
+      error: true,
+      message: 'Crawler result dataset not found',
+    })
+  }
+
   const storeId = payload.resource.defaultDatasetId
 
   getScrapedTeams(storeId)
     .then(scraperOutput => {
       getCMSTeams()
         .then(cmsTeams => {
-          const teams = scraperOutput.map(team => {
-            const cmsConfig = cmsTeams.find(t => t.hash === team.hash) || {}
+          return scraperOutput.map(team => {
+            const cmsConfig = cmsTeams.find(t => t.hash === team.hash)
 
             return {
               active: !!cmsConfig,
@@ -87,10 +128,8 @@ app.post('/api/populateTeams/', function(req, res) {
               ...cmsConfig,
             }
           })
-
-          return teams
         })
-        .then(insertTeams)
+        .then(teams => saveTeams(teams, serviceAction))
         .then(_ =>
           res.status(200).json({
             ok: true,
