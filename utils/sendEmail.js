@@ -12,6 +12,7 @@ function sendEmail(email, { name, team }) {
             html: `<div style="background-color: ${team.theme['base-theme-color']}; color: ${team.theme['base-content-color']}">
                 <p>Olá <strong>${name}</strong>!</p>
                 <p>Time: ${team.name}</p>
+                <p>Time apelido: ${team.alias}</p>
             </div>`,
         }
 
