@@ -9,12 +9,8 @@
         "QUEUE_URL": "@queue_url",
         "CORS_ALLOWED_ORIGIN": "@cors_allowed_origin",
         "FAUNA_DB_KEY": "@fauna_db_key",
-        "WEBHOOK_PERMISSIONS": {
-            "cloudamqp-webhook": {
-                "WEBHOOK_KEY": "@cloudamqp.webhook-key",
-                "WEBHOOK_SECRET": "@cloudamqp.webhook-secret"
-            }
-        }
+        "WEBHOOK_KEY": "@cloudamqp.webhook-key",
+        "WEBHOOK_SECRET": "@cloudamqp.webhook-secret"
     },
     "builds": [
         {

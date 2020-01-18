@@ -13,17 +13,8 @@ function webhookMiddleware(req, res, next) {
 
     const { secret } = req.query
 
-    const webhookPermissions = process.env.WEBHOOK_PERMISSIONS
-    const consumerUserAgent = req.headers['user-agent']
-
-    const currentWebHookConfig = webhookPermissions[consumerUserAgent]
-
-    if (!currentWebHookConfig) {
-        return notAllowed()
-    }
-
-    const webhookKey = currentAgent.WEBHOOK_KEY
-    const webhookSecret = currentAgent.WEBHOOK_SECRET
+    const webhookKey = process.env.WEBHOOK_KEY
+    const webhookSecret = process.env.WEBHOOK_SECRET
 
     const cipher = Buffer.from(secret, 'base64').toString()
 
