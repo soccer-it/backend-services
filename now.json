@@ -10,6 +10,10 @@
         "CORS_ALLOWED_ORIGIN": "@cors_allowed_origin",
         "FAUNA_DB_KEY": "@fauna_db_key",
         "WEBHOOK_KEY": "@webhook_key",
+        "APIFY_API_URL": "@apify_api_url",
+        "AIRTABLE_TEAMS_BASE_KEY": "@airtable_teams_base_key",
+        "AIRTABLE_API_URL": "@airtable_api_url",
+        "AIRTABLE_API_KEY": "@airtable_api_key",
         "WEBHOOK_SECRET": "@webhook_secret"
     },
     "builds": [
@@ -32,6 +36,11 @@
         {
             "src": "/api/notifyNewUser/",
             "dest": "/api/notifyNewUser/",
+            "methods": ["POST"]
+        },
+        {
+            "src": "/api/populateTeams/",
+            "dest": "/api/populateTeams/",
             "methods": ["POST"]
         }
     ]
