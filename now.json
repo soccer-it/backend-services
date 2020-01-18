@@ -1,0 +1,42 @@
+{
+    "version": 2,
+    "build": {
+        "env": {}
+    },
+    "env": {
+        "EMAIL_SERVICE_URL": "@email_service_url",
+        "EMAIL_SERVICE_KEY": "@email_service_key",
+        "QUEUE_URL": "@queue_url",
+        "CORS_ALLOWED_ORIGIN": "@cors_allowed_origin",
+        "FAUNA_DB_KEY": "@fauna_db_key",
+        "WEBHOOK_PERMISSIONS": {
+            "cloudamqp-webhook": {
+                "WEBHOOK_KEY": "@cloudamqp.webhook-key",
+                "WEBHOOK_SECRET": "@cloudamqp.webhook-secret"
+            }
+        }
+    },
+    "builds": [
+        {
+            "src": "api/**/*",
+            "use": "@now/node"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/api/health/",
+            "dest": "/api/health/",
+            "methods": ["GET"]
+        },
+        {
+            "src": "/api/addUser/",
+            "dest": "/api/addUser/",
+            "methods": ["POST"]
+        },
+        {
+            "src": "/api/notifyNewUser/",
+            "dest": "/api/notifyNewUser/",
+            "methods": ["POST"]
+        }
+    ]
+}
