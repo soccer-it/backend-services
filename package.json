@@ -1,7 +1,7 @@
 {
-    "name": "soccerit-bff",
+    "name": "soccerit-services",
     "version": "1.0.0",
-    "description": "soccerit | backend for frontend",
+    "description": "soccerit | backend services",
     "author": "@mjnr",
     "engine": {
         "node": "10.18.0",
