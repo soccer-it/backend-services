@@ -12,7 +12,8 @@ export function createDbClient() {
 
             return resolve(dbClient)
         } catch (err) {
-            reject(err)
+            console.log(err)
+            return reject(err)
         }
     })
 }

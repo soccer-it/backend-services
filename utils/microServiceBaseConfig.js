@@ -9,9 +9,25 @@ export default function microServiceConfig() {
             ? '*'
             : process.env.CORS_ALLOWED_ORIGIN
 
+    app.use(
+        bodyParser.urlencoded({
+            extended: false,
+        })
+    )
+
     app.use(bodyParser.json())
 
-    app.use(bodyParser.urlencoded({ extended: false }))
+    app.use(function(err, _, res, next) {
+        if (err) {
+            console.error(err)
+            return res.status(500).json({
+                error: true,
+                message: 'Algum erro aconteceu. Tente novamente mais tarde.',
+            })
+        }
+
+        next()
+    })
 
     app.use(function(_, res, next) {
         res.header('Access-Control-Allow-Origin', corsConfig)

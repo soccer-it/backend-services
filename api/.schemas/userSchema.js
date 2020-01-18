@@ -1,6 +1,8 @@
 import Joi from 'joi'
+import teamSchema from './teamSchema'
 
 const userSchema = Joi.object().keys({
+    userId: Joi.string().optional(),
     name: Joi.string()
         .min(2)
         .max(30)
@@ -9,7 +11,7 @@ const userSchema = Joi.object().keys({
         .email()
         .required(),
     notificationToken: Joi.string().allow(null),
-    team: Joi.string().allow(null),
+    team: teamSchema.required(),
 })
 
-export const validate = userData => Joi.validate(userData, userSchema)
+export default userSchema
