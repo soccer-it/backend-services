@@ -1,17 +1,17 @@
 import Joi from 'joi'
-import teamSchema from './teamSchema'
+import { teamIdSchema } from './teamSchema'
 
 const userSchema = Joi.object().keys({
   userId: Joi.string().optional(),
   name: Joi.string()
     .min(2)
-    .max(30)
+    .max(60)
     .required(),
   email: Joi.string()
-    .email()
+    .email({ tlds: { allow: false } })
     .required(),
   notificationToken: Joi.string().allow(null),
-  team: teamSchema.required(),
+  team: teamIdSchema,
 })
 
 export default userSchema
