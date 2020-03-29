@@ -11,8 +11,11 @@ function webhookMiddleware(req, res, next) {
 
   const jwtSecret = process.env.WEBHOOK_JWT_SECRET
 
-  jwt.verify(secret, jwtSecret, function(err, _) {
-    if (err) {
+  jwt.verify(secret, jwtSecret, function(err, decoded) {
+    if (
+      err ||
+      decoded.soccerit_services_webhook !== process.env.WEBHOOK_JWT_PAYLOAD
+    ) {
       console.log('Error on verify webhook authentication', err)
       return notAllowed()
     }
