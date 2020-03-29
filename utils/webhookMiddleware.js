@@ -1,10 +1,6 @@
-const CryptoJS = require('crypto-js')
+const jwt = require('jsonwebtoken')
 
 function webhookMiddleware(req, res, next) {
-  if (process.env.NODE_ENV === 'development') {
-    return next()
-  }
-
   const notAllowed = () =>
     res.status(401).json({
       error: true,
@@ -13,20 +9,16 @@ function webhookMiddleware(req, res, next) {
 
   const { secret } = req.query
 
-  const webhookKey = process.env.WEBHOOK_KEY
-  const webhookSecret = process.env.WEBHOOK_SECRET
+  const jwtSecret = process.env.WEBHOOK_JWT_SECRET
 
-  const cipher = Buffer.from(secret, 'base64').toString()
+  jwt.verify(secret, jwtSecret, function(err, _) {
+    if (err) {
+      console.log('Error on verify webhook authentication', err)
+      return notAllowed()
+    }
 
-  const decryptedSecret = CryptoJS.AES.decrypt(cipher, webhookSecret).toString(
-    CryptoJS.enc.Utf8
-  )
-
-  if (webhookKey !== decryptedSecret) {
-    return notAllowed()
-  }
-
-  return next()
+    next()
+  })
 }
 
 export default webhookMiddleware
