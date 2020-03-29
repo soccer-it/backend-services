@@ -9,9 +9,7 @@ function sendEmail(email, { name, team }) {
       from: 'ola@info.soccerit.com.br',
       subject: 'soccerit test',
       text: 'Lorem Ipsum',
-      html: `<div style="background-color: ${
-        team.theme['base-theme-color']
-      }; color: ${team.theme['base-content-color']}">
+      html: `<div style="background-color: ${team['base-theme-color']}; color: ${team['base-content-color']}">
                 <p>Olá <strong>${name}</strong>!</p>
                 <p>Time: ${team.name}</p>
                 <p>Time apelido: ${team.alias}</p>
