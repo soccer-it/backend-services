@@ -1,7 +1,7 @@
 import Joi from 'joi'
 import { teamIdSchema } from './teamSchema'
 
-const userSchema = Joi.object().keys({
+const baseUserSchema = Joi.object().keys({
   userId: Joi.string().optional(),
   name: Joi.string()
     .min(2)
@@ -14,4 +14,10 @@ const userSchema = Joi.object().keys({
   team: teamIdSchema,
 })
 
-export default userSchema
+export const addUserSchema = baseUserSchema.keys({
+  userId: Joi.string().optional(),
+})
+
+export const notifyNewUserSchema = baseUserSchema.keys({
+  userId: Joi.string().required(),
+})

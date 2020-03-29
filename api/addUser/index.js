@@ -1,6 +1,6 @@
 import microServiceConfig from '../../utils/microServiceBaseConfig'
 import { createDbClient, q } from '../../utils/db'
-import userSchema from '../.schemas/userSchema'
+import { addUserSchema } from '../.schemas/userSchema'
 import publishMessage from '../../utils/queue'
 
 const app = microServiceConfig()
@@ -8,7 +8,7 @@ const app = microServiceConfig()
 app.post('/api/addUser/', function(req, res) {
   const userData = req.body
 
-  const dataValidation = userSchema.validate(userData)
+  const dataValidation = addUserSchema.validate(userData)
 
   if (dataValidation.error) {
     return res.status(400).json({
@@ -25,12 +25,14 @@ app.post('/api/addUser/', function(req, res) {
   }
 
   createDbClient().then(client => {
+    const teamRef = q.Ref(q.Collection('teams'), userData.team)
+
     client
       .query(
         q.Create(q.Collection('users'), {
           data: {
             ...userData,
-            team: q.Ref(q.Collection('teams'), userData.team),
+            team: teamRef,
           },
         })
       )

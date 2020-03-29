@@ -1,7 +1,6 @@
-import Joi from 'joi'
 import microServiceConfig from '../../utils/microServiceBaseConfig'
 import webhookMiddleware from '../../utils/webhookMiddleware'
-import userSchema from '../.schemas/userSchema'
+import { notifyNewUserSchema } from '../.schemas/userSchema'
 import sendEmail from '../../utils/sendEmail'
 import { createDbClient, q } from '../../utils/db'
 
@@ -56,6 +55,18 @@ function updateUser(userId) {
   })
 }
 
+function getCurrentTeam(team) {
+  const currentTeamPayload = q.Get(q.Ref(q.Collection('teams'), team))
+  const queryForTeam = client => client.query(currentTeamPayload)
+
+  return new Promise((resolve, reject) => {
+    createDbClient()
+      .then(queryForTeam)
+      .then(resolve)
+      .catch(reject)
+  })
+}
+
 function sendOnboardingEmail(userData) {
   return new Promise((resolve, reject) => {
     const { email, userId } = userData
@@ -73,7 +84,7 @@ function sendOnboardingEmail(userData) {
 function notifyNewUser(req, res) {
   const userData = req.body
 
-  const dataValidation = Joi.validate(userData, userSchema)
+  const dataValidation = notifyNewUserSchema.validate(userData)
 
   if (dataValidation.error) {
     return res.status(400).json({
@@ -81,26 +92,42 @@ function notifyNewUser(req, res) {
     })
   }
 
-  const { name, email } = userData
+  const { name, email, team } = userData
 
-  Promise.all([
-    addContact({
-      first_name: name,
-      email,
-    }),
-    sendOnboardingEmail(userData),
-  ])
-    .then(() => {
-      res.status(200).send({
-        ok: true,
+  function notify(teamPayload) {
+    return Promise.all([
+      addContact({
+        first_name: name,
+        email,
+      }),
+      sendOnboardingEmail({ ...userData, team: teamPayload.data }),
+    ])
+      .then(() => {
+        res.status(200).send({
+          ok: true,
+        })
       })
-    })
-    .catch(err => {
-      console.log(err)
+      .catch(err => {
+        const message = 'Error on notify user'
 
-      res.status(500).send({
+        console.log(message, err)
+
+        res.status(500).send({
+          error: true,
+          message,
+        })
+      })
+  }
+
+  getCurrentTeam(team)
+    .then(notify)
+    .catch(err => {
+      const message = 'Error on query for current team'
+      console.log(message, err)
+
+      res.status(400).send({
         error: true,
-        message: 'Error on notify user',
+        message,
       })
     })
 }
