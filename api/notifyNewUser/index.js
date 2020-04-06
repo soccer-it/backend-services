@@ -2,6 +2,7 @@ import microServiceConfig from '../../utils/microServiceBaseConfig'
 import webhookMiddleware from '../../utils/webhookMiddleware'
 import { notifyNewUserSchema } from '../.schemas/userSchema'
 import sendEmail from '../../utils/sendEmail'
+import { subscribeToNotifications } from '../../utils/subscribeToNotifications'
 import { createDbClient, q } from '../../utils/db'
 
 const request = require('request')
@@ -21,7 +22,7 @@ function addContact(contact) {
           Authorization: `Bearer ${process.env.EMAIL_SERVICE_KEY}`,
         },
       },
-      function(err, r, body) {
+      function (err, r, body) {
         if (err) {
           return reject(err)
         }
@@ -38,7 +39,7 @@ function addContact(contact) {
 }
 
 function updateUser(userId) {
-  const updateUserById = client =>
+  const updateUserById = (client) =>
     client.query(
       q.Update(q.Ref(q.Collection('users'), userId), {
         data: {
@@ -48,22 +49,16 @@ function updateUser(userId) {
     )
 
   return new Promise((resolve, reject) => {
-    createDbClient()
-      .then(updateUserById)
-      .then(resolve)
-      .catch(reject)
+    createDbClient().then(updateUserById).then(resolve).catch(reject)
   })
 }
 
 function getCurrentTeam(team) {
   const currentTeamPayload = q.Get(q.Ref(q.Collection('teams'), team))
-  const queryForTeam = client => client.query(currentTeamPayload)
+  const queryForTeam = (client) => client.query(currentTeamPayload)
 
   return new Promise((resolve, reject) => {
-    createDbClient()
-      .then(queryForTeam)
-      .then(resolve)
-      .catch(reject)
+    createDbClient().then(queryForTeam).then(resolve).catch(reject)
   })
 }
 
@@ -72,11 +67,7 @@ function sendOnboardingEmail(userData) {
     const { email, userId } = userData
 
     sendEmail(email, userData)
-      .then(_ =>
-        updateUser(userId)
-          .then(resolve)
-          .catch(reject)
-      )
+      .then((_) => updateUser(userId).then(resolve).catch(reject))
       .catch(reject)
   })
 }
@@ -101,13 +92,14 @@ function notifyNewUser(req, res) {
         email,
       }),
       sendOnboardingEmail({ ...userData, team: teamPayload.data }),
+      subscribeToNotifications({ ...userData, team: teamPayload.data }),
     ])
       .then(() => {
         res.status(200).send({
           ok: true,
         })
       })
-      .catch(err => {
+      .catch((err) => {
         const message = 'Error on notify user'
 
         console.log(message, err)
@@ -121,7 +113,7 @@ function notifyNewUser(req, res) {
 
   getCurrentTeam(team)
     .then(notify)
-    .catch(err => {
+    .catch((err) => {
       const message = 'Error on query for current team'
       console.log(message, err)
 

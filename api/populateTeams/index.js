@@ -113,6 +113,8 @@ app.post('/api/populateTeams/', function(req, res) {
     })
   }
 
+  console.log('payload', payload)
+
   const storeId = payload.resource.defaultDatasetId
 
   getScrapedTeams(storeId)

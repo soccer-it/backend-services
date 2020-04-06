@@ -1,53 +1,64 @@
 {
-  "version": 2,
-  "build": {
-    "env": {}
-  },
-  "env": {
-    "SOCCERIT_SERVICES": "@soccerit_services",
-    "EMAIL_SERVICE_URL": "@email_service_url",
-    "EMAIL_SERVICE_KEY": "@email_service_key",
-    "QUEUE_URL": "@queue_url",
-    "CORS_ALLOWED_ORIGIN": "@cors_allowed_origin",
-    "FAUNA_DB_KEY": "@fauna_db_key",
-    "APIFY_API_URL": "@apify_api_url",
-    "WEBHOOK_JWT_PAYLOAD": "@webhook_jwt_payload",
-    "WEBHOOK_JWT_SECRET": "@webhook_jwt_secret",
-    "AIRTABLE_TEAMS_BASE_KEY": "@airtable_teams_base_key",
-    "AIRTABLE_API_URL": "@airtable_api_url",
-    "AIRTABLE_API_KEY": "@airtable_api_key"
-  },
-  "builds": [
-    {
-      "src": "api/**/*",
-      "use": "@now/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/health/",
-      "dest": "/api/health/",
-      "methods": ["GET"]
-    },
-    {
-      "src": "/api/addUser/",
-      "dest": "/api/addUser/",
-      "methods": ["POST"]
-    },
-    {
-      "src": "/api/notifyNewUser/",
-      "dest": "/api/notifyNewUser/",
-      "methods": ["POST"]
-    },
-    {
-      "src": "/api/populateTeams/",
-      "dest": "/api/populateTeams/",
-      "methods": ["POST"]
-    },
-    {
-      "src": "/api/listTeams/",
-      "dest": "/api/listTeams/",
-      "methods": ["GET"]
-    }
-  ]
+	"version": 2,
+	"build": {
+		"env": {}
+	},
+	"env": {
+		"SOCCERIT_SERVICES": "@soccerit_services",
+		"EMAIL_SERVICE_URL": "@email_service_url",
+		"EMAIL_SERVICE_KEY": "@email_service_key",
+		"QUEUE_URL": "@queue_url",
+		"CORS_ALLOWED_ORIGIN": "@cors_allowed_origin",
+		"FAUNA_DB_KEY": "@fauna_db_key",
+		"APIFY_API_URL": "@apify_api_url",
+		"WEBHOOK_JWT_PAYLOAD": "@webhook_jwt_payload",
+		"WEBHOOK_JWT_SECRET": "@webhook_jwt_secret",
+		"AIRTABLE_TEAMS_BASE_KEY": "@airtable_teams_base_key",
+		"AIRTABLE_API_URL": "@airtable_api_url",
+		"AIRTABLE_API_KEY": "@airtable_api_key",
+		"GOOGLE_SERVICE_ACCOUNT_TYPE": "@google_service_account_type",
+		"GOOGLE_SERVICE_ACCOUNT_PROJECT_ID": "@google_service_account_project_id",
+		"GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY_ID": "@google_service_account_private_key_id",
+		"GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY": "@google_service_account_private_key",
+		"GOOGLE_SERVICE_ACCOUNT_CLIENT_EMAIL": "@google_service_account_client_email",
+		"GOOGLE_SERVICE_ACCOUNT_CLIENT_ID": "@google_service_account_client_id",
+		"GOOGLE_SERVICE_ACCOUNT_AUTH_URI": "@google_service_account_auth_uri",
+		"GOOGLE_SERVICE_ACCOUNT_TOKEN_URI": "@google_service_account_token_uri",
+		"GOOGLE_SERVICE_ACCOUNT_AUTH_PROVIDER_X509_CERT_URL": "@google_service_account_auth_provider_x509_cert_url",
+		"GOOGLE_SERVICE_ACCOUNT_CLIENT_X509_CERT_URL": "@google_service_account_client_x509_cert_url",
+		"GOOGLE_SERVICE_ACCOUNT_DATABASEURL": "@google_service_account_databaseurl"
+	},
+	"builds": [
+		{
+			"src": "api/**/*",
+			"use": "@now/node"
+		}
+	],
+	"routes": [
+		{
+			"src": "/api/health/",
+			"dest": "/api/health/",
+			"methods": [ "GET" ]
+		},
+		{
+			"src": "/api/addUser/",
+			"dest": "/api/addUser/",
+			"methods": [ "POST" ]
+		},
+		{
+			"src": "/api/notifyNewUser/",
+			"dest": "/api/notifyNewUser/",
+			"methods": [ "POST" ]
+		},
+		{
+			"src": "/api/populateTeams/",
+			"dest": "/api/populateTeams/",
+			"methods": [ "POST" ]
+		},
+		{
+			"src": "/api/listTeams/",
+			"dest": "/api/listTeams/",
+			"methods": [ "GET" ]
+		}
+	]
 }
